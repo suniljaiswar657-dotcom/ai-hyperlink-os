@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Activity, Bot, Boxes, BrainCircuit, Check, ChevronRight, Command, Cpu, Globe2, LayoutDashboard, Menu, Play, Plus, Search, Settings2, ShieldCheck, Sparkles, Workflow, Zap } from 'lucide-react';
+import { Activity, Bot, Boxes, BrainCircuit, Check, ChevronRight, Command, Cpu, Globe2, LayoutDashboard, LogOut, Menu, Play, Plus, Search, Settings2, ShieldCheck, Sparkles, Workflow, Zap } from 'lucide-react';
 import './style.css';
+import AuthGate from './AuthGate';
 
 const initialAgents = [
   {name:'Research Agent', type:'Research & intelligence', status:'Active', color:'violet', icon:BrainCircuit, tasks:12},
@@ -16,7 +17,7 @@ const modules = [
   {name:'Developer Hub',desc:'Manage integrations, keys and environments.',icon:Cpu,color:'green',tag:'DEV'},
   {name:'Cloud Workspace',desc:'Organize projects, assets and resources.',icon:Boxes,color:'orange',tag:'WORKSPACE'},
 ];
-function App(){
+function App({user,onLogout}){
   const [active,setActive]=useState('Overview');
   const [agents,setAgents]=useState(initialAgents);
   const [query,setQuery]=useState('');
@@ -38,7 +39,7 @@ function App(){
       <div className="sidebar-bottom"><div className="upgrade-card"><div className="upgrade-icon"><Zap size={18}/></div><b>Unlock your potential</b><p>Connect tools and scale your workflows.</p><button onClick={()=>toast('Plans are not enabled in this starter yet')}>Explore platform <ChevronRight size={15}/></button></div><div className="profile"><div className="avatar">AK</div><div><b>Workspace Admin</b><span>Free workspace</span></div><Settings2 size={17}/></div></div>
     </aside>
     <main className="main">
-      <header className="topbar"><button className="mobile-menu" onClick={()=>toast('Use sidebar navigation on desktop view')}><Menu/></button><div className="breadcrumb">Workspace <ChevronRight size={14}/> <strong>{active}</strong></div><div className="top-actions"><div className="status-pill"><span className="live-dot"/> All systems nominal</div><button className="icon-button" onClick={()=>setActive('Settings')}><Settings2 size={18}/></button><div className="avatar small">AK</div></div></header>
+      <header className="topbar"><button className="mobile-menu" onClick={()=>toast('Use sidebar navigation on desktop view')}><Menu/></button><div className="breadcrumb">Workspace <ChevronRight size={14}/> <strong>{active}</strong></div><div className="top-actions"><div className="status-pill"><span className="live-dot"/> All systems nominal</div><button className="icon-button" onClick={()=>setActive('Settings')}><Settings2 size={18}/></button><button className="icon-button" title="Sign out" onClick={onLogout}><LogOut size={17}/></button><div className="avatar small">{(user?.email||'U').slice(0,2).toUpperCase()}</div></div></header>
       <section className="content">
         <div className="welcome-row"><div><div className="eyebrow"><Sparkles size={14}/> YOUR AI COMMAND CENTER</div><h1>{active==='Overview'?'Make intelligence work for you.':active}</h1><p className="subhead">{active==='Overview'?'One workspace. Connected tools. More meaningful work.':'Manage your '+active.toLowerCase()+' from one unified workspace.'}</p></div><button className="primary-btn" onClick={()=>setShowAgent(true)}><Plus size={17}/> Create agent</button></div>
         <div className="hero-panel"><div className="hero-copy"><div className="hero-chip"><span/> HYPERLINK OS / CORE</div><h2>From scattered tools<br/>to <span>connected intelligence.</span></h2><p>Your command center for AI agents, workflows and business operations. Build a system that works alongside you.</p><div className="hero-buttons"><button className="white-btn" onClick={()=>setActive('AI Agent Hub')}>Explore agents <ChevronRight size={16}/></button><button className="ghost-btn" onClick={()=>setActive('Automation Studio')}><Play size={15}/> Open automation studio</button></div></div><div className="orb-scene"><div className="orb-ring ring1"/><div className="orb-ring ring2"/><div className="orb-ring ring3"/><div className="orb"><div className="orb-core"><Command size={32}/></div></div><div className="orbit-node node-a"><Bot size={17}/></div><div className="orbit-node node-b"><Workflow size={17}/></div><div className="orbit-node node-c"><Sparkles size={17}/></div><div className="orbit-node node-d"><Cpu size={17}/></div></div><div className="hero-footer"><span><ShieldCheck size={15}/> Secure-by-design foundation</span><span><Activity size={15}/> Modular architecture</span><span><Globe2 size={15}/> Ready to expand</span></div></div>
@@ -55,4 +56,4 @@ function App(){
   </div>
 }
 function Stat({label,value,detail,icon:Icon,tone}){return <div className="stat-card"><div className={'stat-icon '+tone}><Icon size={18}/></div><span className="stat-label">{label}</span><strong>{value}</strong><small>{detail}</small></div>}
-createRoot(document.getElementById('root')).render(<App/>);
+createRoot(document.getElementById('root')).render(<AuthGate><App /></AuthGate>);
